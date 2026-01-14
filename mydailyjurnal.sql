@@ -97,6 +97,25 @@ ALTER TABLE `article`
 --
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+-- Add gallery table and sample data
+DROP TABLE IF EXISTS `gallery`;
+CREATE TABLE `gallery` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `judul` text NOT NULL,
+  `gambar` varchar(255) NOT NULL,
+  `tanggal` datetime NOT NULL,
+  `username` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `gallery` (`judul`,`gambar`,`tanggal`,`username`) VALUES
+('Pemandangan 1','pict1.svg','2026-01-01 10:00:00','admin'),
+('Pemandangan 2','pict2.svg','2026-01-02 11:00:00','admin'),
+('Pemandangan 3','pict3.svg','2026-01-03 12:00:00','admin'),
+('Pemandangan 4','pict4.svg','2026-01-04 13:00:00','admin'),
+('Pemandangan 5','pict5.svg','2026-01-05 14:00:00','admin'),
+('Pemandangan 6','pict6.svg','2026-01-06 15:00:00','admin');
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

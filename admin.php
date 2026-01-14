@@ -52,6 +52,28 @@ if (!isset($_SESSION['username'])) {
         --section-text: #ffffff;
       }
 
+      /* Dark-mode helpers (cards, text, and white backgrounds) */
+      [data-theme="dark"] .text-dark {
+        color: var(--section-text) !important;
+      }
+      [data-theme="dark"] .card {
+        background-color: var(--section-bg) !important;
+        color: var(--section-text) !important;
+        border-color: rgba(255,255,255,0.06) !important;
+      }
+      [data-theme="dark"] .card .card-body,
+      [data-theme="dark"] .card .card-header,
+      [data-theme="dark"] .card .card-footer,
+      [data-theme="dark"] .card .card-title,
+      [data-theme="dark"] .card .card-text,
+      [data-theme="dark"] .text-body-secondary {
+        color: var(--section-text) !important;
+      }
+      [data-theme="dark"] .bg-white {
+        background-color: transparent !important;
+        color: var(--section-text) !important;
+      }
+
       html, body{
         background: var(--bg) !important;
         color: var(--text) !important;
@@ -87,12 +109,11 @@ if (!isset($_SESSION['username'])) {
       }
       #theme-toggle:focus{ outline: none; box-shadow: none; }
 
-      footer{
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 100px;
-      }
+      /* Make footer sticky to bottom even when content is short */
+      html, body { height: 100%; }
+      body { display: flex; flex-direction: column; min-height: 100vh; }
+      section#content { flex: 1; padding-bottom: 160px; }
+      footer { margin-top: auto; width: 100%; }
     </style>
   </head>
   <body>
@@ -100,7 +121,7 @@ if (!isset($_SESSION['username'])) {
     <!-- nav begin -->
     <nav class="navbar navbar-expand-lg theme-navbar">
     <div class="container">
-        <a class="navbar-brand" href=".">My Daily Journal</a>
+        <a class="navbar-brand" href="">My Daily Journal</a>
         <button
         class="navbar-toggler"
         type="button"
@@ -122,8 +143,18 @@ if (!isset($_SESSION['username'])) {
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="admin.php?page=article">Article</a>
-            </li> 
-                                  
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="admin.php?page=gallery">Gallery</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="admin.php?page=user">User</a>
+            </li>
+            <li class="nav-item ms-2">
+              <button id="theme-toggle" class="btn btn-sm" aria-label="Toggle theme">
+                <i id="theme-icon" class="bi bi-moon-fill"></i>
+              </button>
+            </li>                                  
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-danger fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?= $_SESSION['username']?>
@@ -169,6 +200,6 @@ if (!isset($_SESSION['username'])) {
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"
     ></script>
-    
+    <script src="java.js"></script>
 </body>
 </html> 

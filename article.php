@@ -1,4 +1,75 @@
-<div class="container">
+<style>
+/* Dark mode for article section and related UI */
+[data-theme="dark"] .article-section {
+  background-color: rgba(255,255,255,0.02) !important;
+  color: var(--section-text) !important;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+[data-theme="dark"] .article-section .btn,
+[data-theme="dark"] .article-section .btn-secondary,
+[data-theme="dark"] .article-section .btn-primary {
+  color: var(--section-text) !important;
+  background-color: rgba(255,255,255,0.04) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+[data-theme="dark"] .article-section .table,
+[data-theme="dark"] .article-section .table th,
+[data-theme="dark"] .article-section .table td {
+  background-color: transparent !important;
+  color: var(--section-text) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+[data-theme="dark"] .article-section .table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: rgba(255,255,255,0.02) !important;
+}
+/* Make modals, form controls, and badges readable */
+[data-theme="dark"] .modal-content {
+  background-color: var(--section-bg) !important;
+  color: var(--section-text) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+[data-theme="dark"] .form-control {
+  background-color: rgba(255,255,255,0.02) !important;
+  color: var(--section-text) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+[data-theme="dark"] .form-label { color: var(--section-text) !important; }
+[data-theme="dark"] .badge { color: var(--section-text) !important; }
+
+/* Modal titles, footer and body */
+[data-theme="dark"] .article-section .modal-title,
+[data-theme="dark"] .article-section .modal-body,
+[data-theme="dark"] .article-section .modal-footer {
+  color: var(--section-text) !important;
+}
+/* make the modal close icon visible in dark mode */
+[data-theme="dark"] .article-section .btn-close {
+  filter: invert(1) grayscale(1) contrast(1.2);
+}
+/* Pagination / page links (next/prev) */
+[data-theme="dark"] .article-section .pagination .page-link {
+  color: var(--section-text) !important;
+  background-color: transparent !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+[data-theme="dark"] .article-section .pagination .page-item.active .page-link {
+  background-color: rgba(255,255,255,0.06) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: var(--section-text) !important;
+}
+[data-theme="dark"] .article-section .pagination .page-item.disabled .page-link {
+  color: rgba(255,255,255,0.4) !important;
+}
+/* Ensure small text and strong elements in list are readable */
+[data-theme="dark"] .article-section small,
+[data-theme="dark"] .article-section p,
+[data-theme="dark"] .article-section strong {
+  color: var(--section-text) !important;
+}
+</style>
+
+<div class="container article-section">
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#modalTambah">
         <i class="bi bi-plus-lg"></i> Tambah Article
@@ -27,7 +98,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="formGroupExampleInput2" class="form-label">Gambar</label>
-                                <input type="file" class="form-control" name="gambar">
+                                <input type="file" class="form-control" name="gambar" accept="image/*">
+                                <img class="img-preview img-fluid mt-2" style="display:none; max-width:320px;" alt="Preview gambar">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -63,6 +135,54 @@ $(document).ready(function(){
         var hlm = $(this).attr("id");
         load_data(hlm);
     });
+
+    // delegated image preview for Add/Edit modals (more robust)
+    $(document).on('change', 'input[type="file"][name="gambar"]', function(e){
+        var file = this.files && this.files[0];
+        var $input = $(this);
+        var $modal = $input.closest('.modal');
+        // prefer preview next to the input (in the same form group)
+        var $preview = $input.siblings('.img-preview').first();
+        var $old = $modal.find('img.old-image').first();
+
+        if (file) {
+            console.log('preview: file selected', file.name, file.type, file.size);
+            var url = URL.createObjectURL(file);
+            if ($preview.length === 0) {
+                $preview = $('<img>').addClass('img-preview img-fluid mt-2').css('max-width','320px').insertAfter($input);
+            }
+            // revoke previous object URL if any
+            var prevUrl = $preview.data('object-url');
+            if (prevUrl) { try { URL.revokeObjectURL(prevUrl); } catch(e){} }
+            $preview.attr('src', url).show().data('object-url', url);
+            if ($old.length) $old.hide();
+        } else {
+            // clear preview
+            if ($preview.length) {
+                var prevUrl = $preview.data('object-url');
+                if (prevUrl) { try { URL.revokeObjectURL(prevUrl); } catch(e){} }
+                $preview.removeAttr('src').hide().data('object-url', '');
+            }
+            if ($old.length) $old.show();
+        }
+    });
+
+    // cleanup when a modal is closed (revoke URLs and reset previews)
+    $(document).on('hidden.bs.modal', '.modal', function(){
+        var $modal = $(this);
+        var $preview = $modal.find('.img-preview').first();
+        if ($preview.length) {
+            var prevUrl = $preview.data('object-url');
+            if (prevUrl) { try { URL.revokeObjectURL(prevUrl); } catch(e){} }
+            $preview.removeAttr('src').hide().data('object-url', '');
+        }
+        // show old image again if present
+        var $old = $modal.find('img.old-image').first();
+        if ($old.length) $old.show();
+        // clear file input so reopening modal starts clean
+        $modal.find('input[type="file"][name="gambar"]').val('');
+    });
+});
 </script>
 
 <?php

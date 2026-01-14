@@ -45,12 +45,63 @@ include "koneksi.php";
         --section-text: #ffffff;
       }
 
-      html, body{
-        background: var(--bg) !important;
-        color: var(--text) !important;
-        transition: background-color 200ms ease, color 200ms ease;
-        font-family: 'Raleway', sans-serif;
+      [data-theme="dark"] .text-dark {
+        color: var(--section-text) !important;
       }
+
+      /* Cards: dark background + white text in dark mode */
+      [data-theme="dark"] .card {
+        background-color: var(--section-bg) !important;
+        color: var(--section-text) !important;
+        border-color: rgba(255,255,255,0.06) !important;
+      }
+      [data-theme="dark"] .card .card-body,
+      [data-theme="dark"] .card .card-footer,
+      [data-theme="dark"] .card .card-title,
+      [data-theme="dark"] .card .card-text,
+      [data-theme="dark"] .text-body-secondary {
+        color: var(--section-text) !important;
+      }
+      /* Make elements with explicit white bg (e.g., .bg-white) readable in dark mode */
+      [data-theme="dark"] .bg-white {
+        background-color: transparent !important;
+        color: var(--section-text) !important;
+      }
+
+      /* Preserve jadwal card header colors in dark mode (keep original day label colors) */
+      [data-theme="dark"] #jadwal .card.bg-primary .card-header { background-color: #0d6efd !important; color: #fff !important; }
+      [data-theme="dark"] #jadwal .card.bg-success .card-header { background-color: #198754 !important; color: #fff !important; }
+      [data-theme="dark"] #jadwal .card.bg-danger .card-header { background-color: #dc3545 !important; color: #fff !important; }
+      [data-theme="dark"] #jadwal .card.bg-warning .card-header { background-color: #ffc107 !important; color: #ffffff !important; }
+      [data-theme="dark"] #jadwal .card.bg-info .card-header    { background-color: #0dcaf0 !important; color: #ffffff !important; }
+      [data-theme="dark"] #jadwal .card.bg-secondary .card-header{ background-color: #6c757d !important; color: #fff !important; }
+      [data-theme="dark"] #jadwal .card.bg-dark .card-header     { background-color: #212529 !important; color: #fff !important; }
+
+      /* Data-diri: dark container and tables in dark mode */
+      [data-theme="dark"] #data-diri .container {
+        background-color: #0b1220 !important;
+        color: var(--section-text) !important;
+        border-radius: 0.5rem;
+        padding: 1rem;
+      }
+      [data-theme="dark"] #data-diri .table,
+      [data-theme="dark"] #data-diri .table th,
+      [data-theme="dark"] #data-diri .table td {
+        color: var(--section-text) !important;
+        border-color: rgba(255,255,255,0.06) !important;
+        background-color: transparent !important;
+      }
+      [data-theme="dark"] #data-diri .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: rgba(255,255,255,0.02) !important;
+      }
+      /* adjust dark borders for headings */
+      [data-theme="dark"] .border-bottom.border-dark {
+        border-bottom-color: rgba(255,255,255,0.12) !important;
+      }
+
+      /* Ensure footer sits at bottom by using flex on body */
+      html, body { height: 100%; }
+      body { display: flex; flex-direction: column; min-height: 100vh; background: var(--bg) !important; color: var(--text) !important; transition: background-color 200ms ease, color 200ms ease; font-family: 'Raleway', sans-serif; }
 
       .theme-navbar{
         background-color: var(--nav-bg) !important;
@@ -72,6 +123,8 @@ include "koneksi.php";
         background: var(--footer-bg) !important;
         color: var(--footer-text) !important;
       }
+      /* Ensure footer sits at bottom */
+      footer { margin-top: auto; width: 100%; }
 
       #theme-toggle{
         border: 1px solid rgba(255,255,255,0.25);
@@ -79,6 +132,54 @@ include "koneksi.php";
         background: transparent;
       }
       #theme-toggle:focus{ outline: none; box-shadow: none; }
+
+      /* Article images: keep consistent aspect ratio and cover the area */
+      #article .card-img-top {
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* Article paragraphs: justify text, enable hyphenation and prevent overflow */
+      #article .card-text,
+      #article .lead,
+      #article p {
+        text-align: justify;
+        text-align-last: left;
+        hyphens: auto;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        word-wrap: break-word;
+      }
+
+      /* Gallery carousel images: fixed display area 16:9, target 1080px height (cropped via object-fit) */
+      #carouselExample .carousel-item img {
+        width: 100%;
+        aspect-ratio: 16/9;
+        height: 720px; /* target display height */
+        object-fit: cover; /* crop so original resolution doesn't distort layout */
+        display: block;
+      }
+      /* Responsive fallbacks so carousel isn't too tall on smaller viewports */
+      @media (max-width: 1200px) {
+        #carouselExample .carousel-item img { height: 60vh; }
+      }
+      @media (max-width: 576px) {
+        #carouselExample .carousel-item img { height: 40vh; }
+      }
+
+      .profile-img-container{ display:flex; justify-content:center; align-items:center; }
+      .profile-img{
+        width: min(220px, 100%);
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border-radius: 50%; /* perfect circle */
+        display:block;
+      }
+      @media (max-width: 576px){
+        .profile-img{ width: 150px; }
+      }
     </style>
   </head>
   <body>
@@ -138,10 +239,10 @@ include "koneksi.php";
       <div class="container">
         <div class="d-sm-flex flex-sm-row-reverse align-items-center">
           <img
-            src="./img/pict1.jpeg"
+            src=""
             width="300"
             class="img-fluid mb-3 mb-sm-0"
-            alt="Banner"
+            alt=""
           />
           <div>
             <h1 class="fw-bold display-5 text-primary">
@@ -159,7 +260,7 @@ include "koneksi.php";
     <!-- article begin -->
 <section id="article" class="text-center p-5">
   <div class="container">
-    <h1 class="fw-bold display-4 pb-3">article</h1>
+    <h1 class="fw-bold display-4 pb-3">Article</h1>
     <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
       <?php
       $sql = "SELECT * FROM article ORDER BY tanggal DESC";
@@ -198,20 +299,9 @@ include "koneksi.php";
           <div class="col">
             <div class="card h-100 bg-primary text-white">
               <div class="card-body">
-                <h5 class="card-title">Kolom 1</h5>
+                <h5 class="card-title">Dark Souls 1</h5>
                 <p class="card-text">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,
-                  temporibus quaerat doloremque, porro ut, possimus voluptates
-                  minus earum debitis quia ea explicabo. Veritatis, commodi qui
-                  laborum nesciunt dolor est non ipsa impedit beatae rerum
-                  provident at ipsum a nisi harum quos natus deleniti vitae
-                  earum iusto autem! Similique, necessitatibus, quasi impedit
-                  itaque at porro placeat consequatur, unde hic soluta quos
-                  dignissimos obcaecati culpa reiciendis aspernatur! Quibusdam
-                  ipsa ad culpa rerum perspiciatis illo aut, et quae maiores
-                  iste, nam commodi fugiat vitae quam aperiam? Autem quam quasi
-                  expedita delectus obcaecati eos. Blanditiis fugiat qui vero,
-                  inventore culpa aspernatur deleniti illo minima.
+                  bercerita tentang karakter pemain undead terkutuk di kerajaan Lordran yang sedang runtuh, yang ditugaskan untuk menghubungkan Api Pertama yang memudar untuk memperpanjang Zaman Api, tetapi malah mengungkap sejarah kelam para dewa, jiwa gelap umat manusia, dan tindakan putus asa Gwyn dalam menghubungkan api tersebut, yang mengarah pada pilihan antara menghubungkannya kembali atau mengantarkan Zaman Kegelapan bagi umat manusia. Kisah ini mengikuti perjalanan Sang Undead Terpilih untuk membunyikan lonceng, mengumpulkan jiwa-jiwa yang kuat, dan menghadapi para dewa untuk menentukan nasib dunia. 
                 </p>
               </div>
             </div>
@@ -220,16 +310,9 @@ include "koneksi.php";
           <div class="col">
             <div class="card h-100 bg-success text-white">
               <div class="card-body">
-                <h5 class="card-title">Kolom 2</h5>
+                <h5 class="card-title">Dark Souls 3</h5>
                 <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Eaque quisquam, consectetur dolorem, sint numquam unde quos
-                  ducimus modi magni vitae necessitatibus fuga soluta eligendi
-                  exercitationem velit hic qui maxime atque, voluptas aliquam
-                  aperiam illo! Alias expedita consequuntur officiis quod
-                  tenetur, quisquam beatae dolor quidem provident maiores
-                  adipisci! Corporis, sunt temporibus. Atque magnam laboriosam
-                  deserunt ipsa quia est nostrum similique sint nemo excepturi.
+                  berlatar di kerajaan Lothric yang runtuh, di mana Sang Ashen One, seorang undead yang bangkit kembali, ditugaskan untuk mengumpulkan Lords of Cinder yang telah meninggalkan tahta mereka dan menghubungkan Api Pertama yang memudar untuk memperpanjang Zaman Api. Sepanjang perjalanan, pemain menghadapi berbagai musuh, makhluk, dan karakter yang kompleks, sambil mengungkap sejarah kelam Lothric dan konflik antara para dewa, manusia, dan makhluk lainnya. Cerita ini mengeksplorasi tema kehancuran, pengorbanan, dan siklus abadi antara cahaya dan kegelapan.
                 </p>
               </div>
             </div>
@@ -238,14 +321,9 @@ include "koneksi.php";
           <div class="col">
             <div class="card h-100 bg-warning text-dark">
               <div class="card-body">
-                <h5 class="card-title">Kolom 3</h5>
+                <h5 class="card-title">Elden Ring</h5>
                 <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
-                  Vitae obcaecati, rerum voluptates odio quidem ipsum qui 
-                  pariatur error doloremque excepturi velit voluptas exercitationem 
-                  dolorem nobis at quasi saepe tempore laudantium fugiat aliquam 
-                  ratione dignissimos? Animi illum nesciunt reiciendis porro 
-                  voluptatem alias numquam maiores saepe?
+                  berlatar di dunia fantasi bernama The Lands Between, di mana pemain mengendalikan karakter yang dikenal sebagai Tarnished, yang dipanggil kembali ke tanah tersebut untuk mengumpulkan pecahan Elden Ring yang hilang dan menjadi Elden Lord. Sepanjang perjalanan, pemain menjelajahi dunia terbuka yang luas, bertemu dengan berbagai karakter, melawan makhluk-makhluk kuat, dan mengungkap misteri di balik kehancuran Elden Ring serta konflik antara dewa-dewa, manusia, dan makhluk lainnya. Cerita ini mengeksplorasi tema kekuasaan, takdir, dan pencarian jati diri di tengah dunia yang penuh bahaya dan keajaiban.
                 </p>
               </div>
             </div>
@@ -261,15 +339,34 @@ include "koneksi.php";
         </h1>
         <div id="carouselExample" class="carousel slide mt-4">
           <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="./img/pict2.jpeg" class="d-block w-100" alt="Gambar 1" />
-            </div>
-            <div class="carousel-item">
-              <img src="./img/pict3.jpeg" class="d-block w-100" alt="Gambar 2" />
-            </div>
-            <div class="carousel-item">
-              <img src="./img/pict4.jpeg" class="d-block w-100" alt="Gambar 3" />
-            </div>
+            <?php
+            // Load gallery images from DB, fall back to static images if none
+            $sqlG = "SELECT * FROM gallery ORDER BY tanggal DESC";
+            $resG = $conn->query($sqlG);
+            // Build slides server-side and only render carousel if at least one slide exists
+            $sqlG = "SELECT * FROM gallery WHERE gambar <> '' ORDER BY tanggal DESC";
+            $resG = $conn->query($sqlG);
+            $slides = '';
+            $slideCount = 0;
+            if ($resG && $resG->num_rows > 0){
+                while ($g = $resG->fetch_assoc()){
+                    $gpath = __DIR__ . '/img/' . $g['gambar'];
+                    if (!empty($g['gambar']) && file_exists($gpath)){
+                        $gurl = 'img/' . rawurlencode($g['gambar']);
+                        $active = ($slideCount==0)? ' active' : '';
+                        $slides .= '<div class="carousel-item' . $active . '">';
+                        $slides .= '<img src="' . $gurl . '" class="d-block w-100" alt="' . htmlspecialchars($g['judul']) . '">';
+                        $slides .= '</div>';
+                        $slideCount++;
+                    }
+                }
+            }
+            if ($slideCount > 0){
+                echo $slides;
+            } else {
+                // no slides found; the client-side script will replace the carousel with a message
+            }
+            ?>
           </div>
           <button
             class="carousel-control-prev"
@@ -290,6 +387,26 @@ include "koneksi.php";
         </div>
       </div>
     </section>
+
+<script>
+$(function(){
+  var $carousel = $('#carouselExample');
+  if ($carousel.length) {
+    $carousel.find('.carousel-item').each(function(){
+      var $img = $(this).find('img');
+      if ($img.length && ($img.attr('alt') === 'gambar' || ($img.attr('src') && $img.attr('src').indexOf('data:image/svg+xml') === 0))) {
+         $(this).remove();
+      }
+    });
+    var cnt = $carousel.find('.carousel-item').length;
+    if (cnt === 0) {
+       $carousel.replaceWith('<div class="mt-4 text-center text-muted"><small>Tidak ada gambar gallery saat ini.</small></div>');
+    } else if (cnt === 1) {
+       $carousel.find('.carousel-control-prev, .carousel-control-next').remove();
+    }
+  }
+});
+</script>
 
     <section id="jadwal" class="text-center p-5">
       <div class="container">

@@ -71,7 +71,8 @@
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="formGroupExampleInput2" class="form-label">Ganti Gambar</label>
-                                                            <input type="file" class="form-control" name="gambar">
+                                                            <input type="file" class="form-control" name="gambar" accept="image/*">
+                                                            <img class="img-preview img-fluid mt-2" style="display:none; max-width:320px;" alt="Preview gambar">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="formGroupExampleInput3" class="form-label">Gambar Lama</label>
@@ -81,7 +82,7 @@
                                                                 if (file_exists($oldPath)) {
                                                                     $oldUrl = 'img/' . rawurlencode($row["gambar"]);
                                                             ?>
-                                                                    <br><img src="<?= $oldUrl ?>" width="100" alt="<?= htmlspecialchars($row["judul"]) ?>">
+                                                                    <br><img class="old-image" src="<?= $oldUrl ?>" width="100" alt="<?= htmlspecialchars($row["judul"]) ?>">
                                                             <?php
                                                                 }
                                                             }

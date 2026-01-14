@@ -16,11 +16,9 @@ function upload_foto($File){
 	//Allowed files:
 	$Allowed = array('jpg', 'png', 'gif', 'jpeg');  
 
-	// Check file size
-	if ($FileSize > 500000) {
-		$message .= "Sorry, your file is too large, max 500KB. ";
-		$uploadOk = 0;
-	}
+	// No file size limit enforced here. Note: PHP server settings (upload_max_filesize and post_max_size) still apply.
+	// If you want to enforce a limit, add a check here, e.g.:
+	// if ($FileSize > 500000) { $message .= "Sorry, your file is too large"; $uploadOk = 0; }
 
 	// Allow certain file formats
 	if(!in_array($FileExt, $Allowed)){
@@ -34,16 +32,29 @@ function upload_foto($File){
 		$hasil['status'] = false; 
 		// if everything is ok, try to upload file
 	}else{
+		//Ensure destination directory exists and is writable
+		$destDir = __DIR__ . '/img/';
+		if (!is_dir($destDir)) {
+			if (!@mkdir($destDir, 0755, true)) {
+				$message .= "Upload directory does not exist and could not be created. ";
+				$hasil['status'] = false; return $hasil;
+			}
+		}
+		if (!is_writable($destDir)) {
+			$message .= "Upload directory is not writable. ";
+			$hasil['status'] = false; return $hasil;
+		}
+
 		//Create new filename:
         $NewName = date("YmdHis"). '.' . $FileExt;
-        $UploadDestination = "img/". $NewName; 
+        $UploadDestination = $destDir . $NewName; 
 
 		if (move_uploaded_file($TmpLocation, $UploadDestination)) {
 			//echo "The file has been uploaded.";
 			$message .= $NewName;
 			$hasil['status'] = true; 
 		}else{
-			$message .= "Sorry, there was an error uploading your file. ";
+			$message .= "Sorry, there was an error moving the uploaded file to the destination. ";
 			$hasil['status'] = false; 
 		}
 	}
